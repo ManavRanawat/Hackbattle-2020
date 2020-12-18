@@ -1,0 +1,1 @@
+# This is a hackathon project for AI Doctor project using ML DL and Django as backend with basic CSS HTML Bootstrap for frontend
