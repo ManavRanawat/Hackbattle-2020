@@ -13,6 +13,9 @@
           {% csrf_token %}
           <fieldset class="form-group">
               <legend class="border-bottom mb-4">Profile Info</legend>
+              {% if h_form %}
+                {{ h_form|crispy }}
+              {% endif %}
               {{ u_form|crispy }}
               {{ p_form|crispy }}
           </fieldset>

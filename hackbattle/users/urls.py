@@ -7,7 +7,7 @@ import users.views as views
 urlpatterns = [
     path('doctor/',views.register,name='ai-doctor'),
     path('<int:pk>/chat/',views.chatsection,name='chat'),
-    path('register-hospital/',views.register_hospital,name='register-hospital'),
+    # path('register-hospital/',views.register_hospital,name='register-hospital'),
     path('',views.home,name="home"),
-    path('hospitals/',views.hospitals,name="hospitals")
+    path('hospitals/',views.dashboard,name="hospitals")
 ]

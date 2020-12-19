@@ -7,19 +7,19 @@ from django.utils import timezone
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-
+    is_hospital=models.BooleanField(default=False)
     def __str__(self):
         return f'{self.user.username} Profile'
 
-    def save(self, *args, **kwargs):
-        super(Profile, self).save(*args, **kwargs)
-
+    def save(self,*args,**kwargs):
+        super().save(*args, **kwargs)
         img = Image.open(self.image.path)
 
         if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
+            output_size = (300,300)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
 
 
 
@@ -36,15 +36,15 @@ class PatientRecord(models.Model):
 
 class Hospital(models.Model):
     name=models.CharField(max_length=40)
-    huser = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,default=None)
     email=models.EmailField(max_length=100)
     description=models.TextField(max_length=400,default="Welcome!")
-    image=models.ImageField(upload_to='hospital_pics',default='default.jpg')
-    phone_no=models.CharField(default=None,max_length=15)
+    # image=models.ImageField(upload_to='hospital_pics',default='default.jpg')
+    phone_no=models.CharField(default=None,max_length=15,null=True)
     rating=models.IntegerField(default=3)
 
     def __str__(self):
-        return self.username
+        return self.user.username
 '''
 Pediatrician ->
  'Jaundice', 'Malaria', 'Chicken pox', 'Dengue', 'Typhoid',

@@ -7,10 +7,10 @@ from django import forms
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
-
+    is_hospital=forms.BooleanField()
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'is_hospital', 'password1', 'password2']
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -27,8 +27,8 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['image']
 
 
-class HospitalRegisterForm(UserCreationForm):
+class HospitalUpdateForm(forms.ModelForm):
 	# description=forms.CharField(max_length=400)
 	class Meta:
-		model=Hospital
-		fields=['name','huser','password1','password2','email','description','phone_no']
+		model = Hospital
+		fields = ['name','email','description','phone_no']
