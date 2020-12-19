@@ -46,6 +46,7 @@ urlpatterns = [
          ),
          name='password_reset_complete'),
     path('', include('users.urls')),
+    path('', include('blog.urls')),
 ]
 
 

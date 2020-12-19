@@ -28,7 +28,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <h4><a class="nav-item nav-link" href="#">Dashboard</a></h2>
+              <h4><a class="nav-item nav-link" href="{% url 'blog-home' %}">Dashboard</a></h2>
               <a class="nav-item nav-link" href="{% url 'hospitals' %}">Hospitals</a>
             </div>
             <!-- Navbar Right Side -->
@@ -36,7 +36,8 @@
               {% if user.is_authenticated %}
               {% if user.profile.is_hospital %}
               <a class="nav-item nav-link" href="{% url 'addspeciality' %}">Add Speciality</a>
-              {% endif %}
+              <a class="nav-item nav-link" href="{% url 'post-create' %}">Add Post</a>
+              {% else %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Consult AI Doctor
@@ -48,6 +49,8 @@
                   <li><a class="dropdown-item" href="{% url 'xray-create' %}">X ray</a></li>
                 </ul>
               </li>
+              {% endif %}
+              
                 
                 <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                 <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>

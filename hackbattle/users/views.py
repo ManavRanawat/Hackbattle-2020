@@ -104,12 +104,12 @@ def chatsection(request,pk):
 # 		form=HospitalRegisterForm()
 # 	return render(request, 'hospital/register.html',{ 'form': form })
 
-def home(request):
-    return render(request, 'hospital/register.html')
+# def home(request):
+#     return render(request, 'hospital/register.html')
 
 def dashboard(request):
     hosp = Hospital.objects.all()
-    return render(request,'users/dashboard.html',{'hospitals':hosp})
+    return render(request,'users/hospitals.html',{'hospitals':hosp})
 
 
 @login_required
