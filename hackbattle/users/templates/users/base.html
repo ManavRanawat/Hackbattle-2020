@@ -34,6 +34,9 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if user.is_authenticated %}
+              {% if user.profile.is_hospital %}
+              <a class="nav-item nav-link" href="{% url 'addspeciality' %}">Add Speciality</a>
+              {% endif %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Consult AI Doctor
@@ -52,6 +55,7 @@
                 <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
                 <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
               {% endif %}
+            
             </div>
           </div>
         </div>

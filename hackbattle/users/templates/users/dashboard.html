@@ -1,4 +1,3 @@
-{% extends "users/base.html" %}
 {% load static%}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -205,13 +204,15 @@ font-weight: normal;
 }
 </style>
 <body>
-    {% load crispy_forms_tags %}
-    {% block content %}
+   
+  
         {% for hospital in hospitals %}
         <section class="cards-wrapper">
             <div class="card-grid-space">
-            <a class="card" href="#" style="--bg-img: url({{ hospital.user.profile.image }})"></a>
+            <a class="card" href="#" style="--bg-img: url({{ hospital.user.profile.image.url }})">
                 <div>
+                    <br>
+                    <br>
                     <h1>{{ hospital.name }}</h1>
                     <p>{{ hospital.description }}</p>
                     <div class="date">{{ hospital.phone_no }}</div>
@@ -222,9 +223,10 @@ font-weight: normal;
                 {% ifnotequal hospital.user.profile.is_hospital True %}
                     <a href="{% url 'chat' hospital.id %}">Seek Help!</a>
                 {% endifnotequal %}
+            </a>
             </div>
         </section>
         {% endfor %}
-    {% endblock content %}
+    
 </body>
 </html>

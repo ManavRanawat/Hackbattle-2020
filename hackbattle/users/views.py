@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect ,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm,HospitalUpdateForm
+from .forms import *
 from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 import pickle
@@ -110,6 +110,20 @@ def home(request):
 def dashboard(request):
     hosp = Hospital.objects.all()
     return render(request,'users/dashboard.html',{'hospitals':hosp})
+
+
+@login_required
+def addspeciality(request):  
+    if not request.user.profile.is_hospital:
+        messages.warning(request, f'You are not authorized for adding speciality!')
+        return redirect('hospitals')
+    hospital=request.user.hospital
+    existing=Speciality.objects.filter(username=hospital)
+    if request.method=="POST" and request.POST.get('speciality') not in existing:
+        Speciality.objects.create(username=request.user.hospital,speciality=request.POST.get('speciality'))
+    spec=SpecialityUpdateForm()
+    existing=Speciality.objects.filter(username=hospital)
+    return render(request,'users/addspeciality.html',{'existing':existing,'hospital':hospital,'form':spec})
 
 
 

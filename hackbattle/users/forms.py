@@ -7,7 +7,7 @@ from django import forms
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
-    is_hospital=forms.BooleanField()
+    is_hospital=forms.BooleanField(required=False)
     class Meta:
         model = User
         fields = ['username', 'email', 'is_hospital', 'password1', 'password2']
@@ -32,3 +32,9 @@ class HospitalUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Hospital
 		fields = ['name','email','description','phone_no']
+
+class SpecialityUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Speciality
+        fields = ['speciality']

@@ -18,4 +18,5 @@ urlpatterns = [
     path('xray_report/',views.report_xray,name='report-xray'),
     path('scanct_form/', CTCreateView.as_view(), name='ct-create'),
     path('scanxray_form/', XrayCreateView.as_view(), name='xray-create'),
+    path('addspeciality/',views.addspeciality,name='addspeciality'),
 ]

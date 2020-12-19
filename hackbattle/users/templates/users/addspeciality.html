@@ -1,0 +1,25 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <h2>
+            {{hospital.name}}
+            <small class="text-muted"> currently rated {{hospital.rating}}/5</small>
+        </h2>
+        {% if existing %}
+            <h4>Specialized in:</h4>
+            <ul class="list-group">
+                {% for specialist in existing %}
+                    <li class="list-group-item list-group-item-success">{{specialist.speciality}}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <h3>Add any of these if you specialize in them!</h3>
+        <form method="POST" >
+            {% csrf_token %}
+            {{form}}
+            <br><br>
+            <input type="submit" value="Submit"/>   
+        </form>
+    </div>
+{% endblock content %}

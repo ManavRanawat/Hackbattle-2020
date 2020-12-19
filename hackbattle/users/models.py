@@ -66,12 +66,12 @@ Family Medicine->
 class Speciality(models.Model):
     username=models.ForeignKey(Hospital,on_delete=models.CASCADE)
     diff_spec=(
-        ('1','Pediatrician'),
-        ('2','Cardiologist'),
-        ('3','Gynecologist'),
-        ('4','Internist'),
-        ('5','Dermatologist'),
-        ('6','Family Medicine')
+        ('Pediatrician','Pediatrician'),
+        ('Cardiologist','Cardiologist'),
+        ('Gynecologist','Gynecologist'),
+        ('Internist','Internist'),
+        ('Dermatologist','Dermatologist'),
+        ('Family Medicine','Family Medicine')
     )
     speciality=models.CharField(choices=diff_spec,max_length=100,default=6)
 
@@ -116,3 +116,5 @@ class ScanXRay(models.Model):
 
     def get_absolute_url(self):
         return reverse('report-xray')
+
+

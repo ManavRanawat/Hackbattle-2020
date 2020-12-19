@@ -19,7 +19,7 @@ def predict_xray(path):
 
     pred=loaded_model.predict(image)
     print(pred)
-    if pred[0][1]>0.5:
+    if pred[0][1]<0.5:
         print('covid')
         return 'covid'
     else:

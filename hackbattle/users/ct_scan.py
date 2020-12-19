@@ -7,10 +7,10 @@ def predict_ct(path):
     loaded_model = load_model('xception_ct.h5')
     path=path[1:]
     # path='covid1.png'
-    print(path)
+    # print(path)
     image = cv2.imread(str(path)) # read file 
 
-    print(image)
+    # print(image)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # arrange format as per keras
     image = cv2.resize(image,(224,224))
     image=image.reshape(-1,224, 224, 3)
@@ -18,7 +18,7 @@ def predict_ct(path):
 
     pred=loaded_model.predict(image)
     print(pred)
-    if pred[0][1]>0.5:
+    if pred[0][1]<0.5:
         print('covid')
         return 'covid'
     else:
