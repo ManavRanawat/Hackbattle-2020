@@ -1,0 +1,10 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+<h1>Disease predicted : {{disease}}</h1>
+ <h2><i>we suggest you to visit a {{res}} </i></h2>
+ <h3>You can visit the following hospitals </h3>
+ {% for i in obj %}
+     <h1>{{i}}</h1>
+ {% endfor %}
+{% endblock content %}

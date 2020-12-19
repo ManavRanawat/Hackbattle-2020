@@ -119,8 +119,13 @@ def addspeciality(request):
         return redirect('hospitals')
     hospital=request.user.hospital
     existing=Speciality.objects.filter(username=hospital)
-    if request.method=="POST" and request.POST.get('speciality') not in existing:
-        Speciality.objects.create(username=request.user.hospital,speciality=request.POST.get('speciality'))
+    aleard_added=[]
+    for i in existing:
+        aleard_added.append(i.speciality)
+    print(aleard_added)
+    if request.method=="POST" :
+        if  request.POST.get('speciality') not in aleard_added:
+            Speciality.objects.create(username=request.user.hospital,speciality=request.POST.get('speciality'))
     spec=SpecialityUpdateForm()
     existing=Speciality.objects.filter(username=hospital)
     return render(request,'users/addspeciality.html',{'existing':existing,'hospital':hospital,'form':spec})
@@ -129,9 +134,24 @@ def addspeciality(request):
 
 ############################
 
+specialist={'Pediatrician':['Jaundice', 'Malaria', 'Chicken pox', 'Dengue', 'Typhoid'],
+'Cardiologist':['Chronic cholestasis', 'Heart attack', 'Varicose veins', 'Hypothyroidism', 'Hyperthyroidism', 'Hypoglycemia',  'Osteoarthristis', 'Arthritis'],
+ 'Gynecologist': ['Cervical spondylosis','(vertigo) Paroymsal  Positional Vertigo', 'Urinary tract infection'] ,
+  'Internist':['Diabetes ', 'Gastroenteritis', 'Bronchial Asthma', 'Hypertension ', 'Migraine', 'hepatitis A', 'Hepatitis B', 'Hepatitis C', 'Hepatitis D', 'Hepatitis E', 'Alcoholic hepatitis', 'Gastroenteritis', 'Paralysis (brain hemorrhage)'],
+  'Dermatologist':['Acne', 'Fungal infection', 'Allergy', 'GERD', 'Chronic cholestasis', 'Drug Reaction', 'Peptic ulcer diseae', 'AIDS'],
+  'Family Medicine':['Tuberculosis', 'Common Cold', 'Pneumonia', 'Dimorphic hemmorhoids(piles)']
+  }
+
+
+
+
+
+
 d = pickle.load(open('symptoms_label.txt', 'rb'))
 arr=d.keys()
 a=[]
+
+
 def disease(request):
     # disease_p.disease()
     result=[]
@@ -147,18 +167,37 @@ def disease(request):
         print(a)
         if flag==1:
             result=disease_p.disease(a)
-        
-            # PatientRecord.objects.create(patient=request.user.profile,symptom1=a[0],symptom2=a[1],symptom3=a[2],symptom=a[3],disease=result[0])
+            if len(a)==0:
+                print("no symptom selected")
+            elif len(a)==1:
+                PatientRecord.objects.create(patient=request.user.profile,symptom1=a[0],symptom2=None,symptom3=None,symptom4=None,disease_detected=result[0])
+            elif len(a)==2:
+                PatientRecord.objects.create(patient=request.user.profile,symptom1=a[0],symptom2=a[1],symptom3=None,symptom4=None,disease_detected=result[0])
+            elif len(a)==3:
+                PatientRecord.objects.create(patient=request.user.profile,symptom1=a[0],symptom2=a[1],symptom3=a[2],symptom4=None,disease_detected=result[0])
+            else:
+                PatientRecord.objects.create(patient=request.user.profile,symptom1=a[0],symptom2=a[1],symptom3=a[2],symptom4=a[3],disease_detected=result[0])
             for i in range(0,len(a)):
                 print(a)
                 a.pop(0)
+
             
             # return redirect(request,'home_display/disease.html')
     if len(result)==0:  
         return render(request,'users/disease.html',{'arr':arr,'result':result,'a':a})
     else:
         
-        return render(request,'users/disease.html',{'arr':arr,'result':result[0],'a':a})
+        res=""
+        for i in specialist.keys():
+            if result[0] in specialist[i]:
+                res=i
+                break
+        print("disease ka specialiy",res)
+        obj=Speciality.objects.filter(speciality=res)
+        print(obj)
+        # arr=obj.values()
+        
+        return render(request,'users/hospital_recommend.html',{'disease':result[0],'obj':obj,'res':res})
 
 class CTCreateView(LoginRequiredMixin, CreateView):
     model = ScanCT
@@ -187,8 +226,39 @@ def report_xray(request):
     report=ScanXRay.objects.filter(user=request.user).last()
     res=ct_scan.predict_ct(report.xray.url)
     return render(request,'users/xray_report.html',{'result':res})
+
+
+def hospital_recommend(request):
+    print("recommend me aa raha hai")
+   
+    # disease=PatientRecord.objects.filter(user=request.user).last()
+    # res=""
+    # for i in specialist.keys():
+    #     if disease in specialist[i]:
+    #         res=i
+    #         break
+    # print(res)
+
+    return render(request,'users/hospital_recommend.html')
     
 
 
 
 
+    #  Pediatrician ->
+    # 'Jaundice', 'Malaria', 'Chicken pox', 'Dengue', 'Typhoid',
+
+    # Cardiologist->
+    # 'Chronic cholestasis', 'Heart attack', 'Varicose veins', 'Hypothyroidism', 'Hyperthyroidism', 'Hypoglycemia',  'Osteoarthristis', 'Arthritis',
+
+    # Gynecologist->
+    # 'Cervical spondylosis','(vertigo) Paroymsal  Positional Vertigo', 'Urinary tract infection',
+
+    # Internist->
+    # 'Diabetes ', 'Gastroenteritis', 'Bronchial Asthma', 'Hypertension ', 'Migraine', 'hepatitis A', 'Hepatitis B', 'Hepatitis C', 'Hepatitis D', 'Hepatitis E', 'Alcoholic hepatitis', 'Gastroenteritis', 'Paralysis (brain hemorrhage)'
+
+    # Dermatologist->
+    # 'Acne', 'Fungal infection', 'Allergy', 'GERD', 'Chronic cholestasis', 'Drug Reaction', 'Peptic ulcer diseae', 'AIDS'
+
+    # Family Medicine->
+    # 'Tuberculosis', 'Common Cold', 'Pneumonia', 'Dimorphic hemmorhoids(piles)',
