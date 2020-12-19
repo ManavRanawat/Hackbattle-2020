@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 from django.utils import timezone
+from django.urls import reverse
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -25,13 +26,11 @@ class Profile(models.Model):
 
 class PatientRecord(models.Model):
     patient=models.ForeignKey(Profile,on_delete=models.CASCADE)
-    symptom1=models.CharField(max_length=40)
-    symptom2=models.CharField(max_length=40)
-    symptom3=models.CharField(max_length=40)
-    symptom4=models.CharField(max_length=40)
-    ct_scan=models.ImageField(upload_to='report_pics')
-    ct_scan=models.ImageField(upload_to='report_pics')
-    disease_detected=models.CharField(max_length=40)
+    symptom1=models.CharField(max_length=40,null=True)
+    symptom2=models.CharField(max_length=40,null=True)
+    symptom3=models.CharField(max_length=40,null=True)
+    symptom4=models.CharField(max_length=40,null=True)
+    disease_detected=models.CharField(max_length=40,null=True)
     date=models.DateTimeField(default=timezone.now)
 
 class Hospital(models.Model):
@@ -103,3 +102,17 @@ class Chat(models.Model):
     sender=models.CharField(max_length=15,default="Patient")
     message=models.CharField(max_length=300)
     date=models.DateTimeField(default=timezone.now)
+
+class ScanCT(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank= True, null=True)
+    ct_scan=models.ImageField(upload_to='report', blank= True,null=True)
+
+    def get_absolute_url(self):
+        return reverse('report-ct')
+
+class ScanXRay(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank= True, null=True)
+    xray=models.ImageField(upload_to='report', blank= True,null=True)
+
+    def get_absolute_url(self):
+        return reverse('report-xray')

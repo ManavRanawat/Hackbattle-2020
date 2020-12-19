@@ -34,7 +34,18 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if user.is_authenticated %}
-                <a class="nav-item nav-link" href="{% url 'ai-doctor' %}">Consult AI Doctor</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Consult AI Doctor
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{% url 'disease' %}">Disease Detection</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url 'ct-create' %}">CT Scan</a></li>
+                  <li><a class="dropdown-item" href="{% url 'xray-create' %}">X ray</a></li>
+                </ul>
+              </li>
+                
                 <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                 <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
               {% else %}

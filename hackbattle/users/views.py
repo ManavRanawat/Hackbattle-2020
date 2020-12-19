@@ -3,7 +3,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm,HospitalUpdateForm
-from .models import Profile,Chat,Hospital,Speciality
+from .models import *
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+import pickle
+from . import disease_p,ct_scan,xray
+from django.views.generic import CreateView
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -105,6 +110,71 @@ def home(request):
 def dashboard(request):
     hosp = Hospital.objects.all()
     return render(request,'users/dashboard.html',{'hospitals':hosp})
+
+
+
+############################
+
+d = pickle.load(open('symptoms_label.txt', 'rb'))
+arr=d.keys()
+a=[]
+def disease(request):
+    # disease_p.disease()
+    result=[]
+    if request.method=="POST":
+        flag=0
+        for i in arr:
+            if i in request.POST:
+                a.append(i)
+                # print("i",i)
+        if 'submit' in request.POST:
+            flag=1
+            
+        print(a)
+        if flag==1:
+            result=disease_p.disease(a)
+        
+            # PatientRecord.objects.create(patient=request.user.profile,symptom1=a[0],symptom2=a[1],symptom3=a[2],symptom=a[3],disease=result[0])
+            for i in range(0,len(a)):
+                print(a)
+                a.pop(0)
+            
+            # return redirect(request,'home_display/disease.html')
+    if len(result)==0:  
+        return render(request,'users/disease.html',{'arr':arr,'result':result,'a':a})
+    else:
+        
+        return render(request,'users/disease.html',{'arr':arr,'result':result[0],'a':a})
+
+class CTCreateView(LoginRequiredMixin, CreateView):
+    model = ScanCT
+    fields = ['ct_scan']
+    # template_name = 'users/scan_ct.html'
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        # print(form.instance.image_ct.url)
+        return super().form_valid(form)
+
+class XrayCreateView(LoginRequiredMixin, CreateView):
+    model = ScanXRay
+    fields = ['xray']
+    # template_name = 'users/scan_xray.html'
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        # print(form.instance.image_ct.url)
+        return super().form_valid(form)
+
+def report_ct(request):
+    report=ScanCT.objects.filter(user=request.user).last()
+    res=ct_scan.predict_ct(report.ct_scan.url)
+    return render(request,'users/ct_report.html',{'result':res})
+
+def report_xray(request):
+    report=ScanXRay.objects.filter(user=request.user).last()
+    res=ct_scan.predict_ct(report.xray.url)
+    return render(request,'users/xray_report.html',{'result':res})
+    
+
 
 
 

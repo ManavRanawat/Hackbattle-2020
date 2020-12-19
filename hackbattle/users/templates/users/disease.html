@@ -1,0 +1,28 @@
+{% extends "users/base.html" %}
+{% block content  %}
+
+{% if result %}
+<h1>Detected Disease : {{result}}</h1>
+{% endif %}
+<div style="margin-right:10px;width:100%">
+    <h3>Select your symptoms </h3>
+    <br>
+<form method="POST" action="{% url 'disease' %}" >
+    
+    {% csrf_token  %} 
+    {% for i in arr %}
+        {% if i in a %}
+        <button  class="btn btn-dark" style="margin:5px" name="{{i}}" >{{i}}</button>
+        {% else %}
+        <button  class="btn btn-outline-dark" style="margin:5px" name="{{i}}" >{{i}}</button>
+        {% endif %}
+    {% endfor %}
+    <br>
+    <br>
+    <br>
+    <button type="submit" class="btn btn-primary" name="submit" >Submit</button>
+</form>
+</div>
+
+
+{% endblock content %}
