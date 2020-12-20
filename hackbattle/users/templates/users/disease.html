@@ -2,12 +2,12 @@
 {% block content  %}
 
 {% if result %}
-<h1>Detected Disease : {{result}}</h1>
+<h1 style="color: black;">Detected Disease : {{result}}</h1>
 {% endif %}
 <div style="margin-right:10px;width:100%">
-    <h3>Select your symptoms </h3>
+    <h3 style="color: black;">Select your symptoms </h3>
     <br>
-<form method="POST" action="{% url 'disease' %}" >
+<form method="POST" action="{% url 'disease' %}" ">
     
     {% csrf_token  %} 
     {% for i in arr %}

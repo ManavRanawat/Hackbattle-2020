@@ -1,9 +1,9 @@
 {% extends "users/base.html" %}
 
 {% block content %}
-<h1>Disease predicted : {{disease}}</h1>
-<h2><i>we suggest you to visit a {{specialist}} </i></h2>
-<h3>Book an appointment in one of the hospitals nearby!</h3>
+<h1 style="color: black;">Disease predicted : {{disease}}</h1>
+<h2 style="color: black;"><i>we suggest you to visit a {{specialist}} </i></h2>
+<h3 style="color: black;">Book an appointment in one of the hospitals nearby!</h3>
 <br><br>
-<a href="{% url 'suggested-specialist' specialist %}">View Suggested Hospitals</a>
+<a href="{% url 'suggested-specialist' specialist %}" class="btn btn-info">View Suggested Hospitals</a>
 {% endblock content %}

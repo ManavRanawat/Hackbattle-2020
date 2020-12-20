@@ -2,22 +2,22 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="border-top pt-3">
-        <h2>{{hospital.name}}</h2>
-        <h5>Contact us at {{hospital.email}}</h5>
+        <h2 style="color: black;">{{hospital.name}}</h2>
+        <h5 style="color: black;">Contact us at {{hospital.email}}</h5>
     </div>
-    <div class="jumbotron" >
+    <div class="jumbotron" style="color: white; background-color: black;">
         {% if chats %}
             {% for chat in chats %}
                 {% ifnotequal chat.sender 'Hospital' %}
                     <div class="contain darker">    
-                        <h4>{{chat.patient.user.username}}</h4>
+                        <h4 style="color: grey;">{{chat.patient.user.username}}</h4>
                 {% else %} 
                 <!-- message is from Hospital -->
                     <div class="contain">
                         <h4>{{chat.hospital.username}}</h4>
                 {% endifnotequal %}
                         <!-- <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right"> -->
-                        <p>{{chat.message}}</p>
+                        <p style="color: black;">{{chat.message}}</p>
                         <span class="time-left">{{chat.date|date:'d M, H:i'}}</span>
                     </div>
             {% endfor %}

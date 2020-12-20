@@ -1,6 +1,6 @@
 body {
     /* background: #fafafa; */
-    /* background: url("images/bg.jpg") no-repeat center; */
+    background: url("images/bg-hosp.jpg") no-repeat center;
     background-size: cover;
     height: 100%;
     color: #333333;
@@ -9,7 +9,7 @@ body {
   
   h1, h2, h3, h4, h5, h6 {
     /* color: red; */
-    color: #444444;
+    color: hsl(0, 100%, 99%);
   }
   
   ul {
@@ -33,15 +33,15 @@ body {
   }
   
   .content-section {
-    background: #ffffff;
+    background: rgb(0, 0, 0);
     padding: 10px 20px;
-    border: 1px solid #dddddd;
+    border: 1px solid #1b0909;
     border-radius: 3px;
     margin-bottom: 20px;
   }
   
   .article-title {
-    color: #444444;
+    color: #e0e0e0;
   }
   
   a.article-title:hover {
@@ -51,6 +51,7 @@ body {
   
   .article-content {
     white-space: pre-line;
+    color: rgb(160, 155, 155);
   }
   
   .article-img {
