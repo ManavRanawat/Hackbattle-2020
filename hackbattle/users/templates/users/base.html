@@ -35,6 +35,7 @@
             <div class="navbar-nav">
               {% if user.is_authenticated %}
               {% if user.profile.is_hospital %}
+              <a class="nav-item nav-link" href="{% url 'patients_chat' %}">View Chats</a>
               <a class="nav-item nav-link" href="{% url 'addspeciality' %}">Add Speciality</a>
               <a class="nav-item nav-link" href="{% url 'post-create' %}">Add Post</a>
               {% else %}

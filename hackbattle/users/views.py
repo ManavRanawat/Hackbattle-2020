@@ -90,6 +90,29 @@ def chatsection_user(request,pk):
     chats=Chat.objects.filter(hospital=hosp,patient=pat).order_by('date')
     return render(request,'users/chatsection_user.html',{'hospital':hosp,'chats':chats})
 
+def chatsection_hospital(request,pk):
+    if request.method=="POST":
+        patient=get_object_or_404(User,id=pk)
+        hosp=request.user.hospital
+        msg=request.POST.get("usermessage","")
+        if msg!="":
+            chat_obj=Chat(hospital=hosp,patient=patient.profile,sender="Hospital",message=msg)
+            chat_obj.save()
+    patient=get_object_or_404(User,id=pk)
+    # pat_id=request.user.id
+    hosp=request.user.hospital
+    chats=Chat.objects.filter(hospital=hosp,patient=patient.profile).order_by('date')
+    return render(request,'users/chatsection_hospital.html',{'patient':patient,'chats':chats})
+
+def patientslist(request):
+    chats=Chat.objects.filter(hospital=request.user.hospital)
+    users=[]
+    for chat in chats:
+        if chat.patient not in users:
+            users.append(chat.patient)
+    return render(request,'users/patientslist.html',{'patients':users})
+
+
 
 
 # Create your views here.

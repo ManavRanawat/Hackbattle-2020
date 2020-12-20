@@ -1,0 +1,39 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="border-top pt-3">
+        <h2>{{hospital.name}}</h2>
+        <h5>Contact us at {{hospital.email}}</h5>
+    </div>
+    <div class="jumbotron" >
+        {% if chats %}
+            {% for chat in chats %}
+                {% ifnotequal chat.sender 'Hospital' %}
+                    <div class="contain">    
+                        <h4>{{chat.patient.user.username}}</h4>
+                {% else %} 
+                <!-- message is from Hospital -->
+                    <div class="contain darker">
+                        <h4>{{chat.hospital.username}}</h4>
+                {% endifnotequal %}
+                        <!-- <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right"> -->
+                        <p>{{chat.message}}</p>
+                        <span class="time-left">{{chat.date|date:'d M, H:i'}}</span>
+                    </div>
+            {% endfor %}
+        {% else %}
+            <h2>Ask your doubts here!</h2>
+        {% endif %}
+    </div>
+    <br><br>
+    <form method="POST" >
+        {% csrf_token %}
+        <div class="form-outline">
+            <input type="text" id="formControlLg" class="form-control form-control-lg" name="usermessage" />
+            <!-- <label class="form-label" for="formControlLg">Go ahead and ask your queries!</label> -->
+          </div>
+        <!-- <input type="text" placeholder="Go ahead and ask your queries!" name="usermessage" />  -->
+        <button type="submit" >Send</button>
+        <br>
+    </form>
+{% endblock content %}

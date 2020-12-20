@@ -10,6 +10,8 @@ from users.views import *
 urlpatterns = [
     path('doctor/',views.register,name='ai-doctor'),
     path('<int:pk>/chat/',views.chatsection_user,name='chat'),
+    path('<int:pk>/chathospital/',views.chatsection_hospital,name='chat_hospital'),
+    path('patientschat/',views.patientslist,name='patients_chat'),
     # path('register-hospital/',views.register_hospital,name='register-hospital'),
     # path('',views.home,name="home"),
     path('hospitals/',views.dashboard,name="hospitals"),

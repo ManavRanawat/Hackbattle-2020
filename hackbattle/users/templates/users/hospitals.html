@@ -209,21 +209,23 @@ font-weight: normal;
         {% for hospital in hospitals %}
         <section class="cards-wrapper">
             <div class="card-grid-space">
-            <a class="card" href="#" style="--bg-img: url({{ hospital.user.profile.image.url }})">
-                <div>
-                    <br>
-                    <br>
-                    <h1>{{ hospital.name }}</h1>
-                    <p>{{ hospital.description }}</p>
-                    <div class="date">{{ hospital.phone_no }}</div>
-                        <div class="tags">
-                            <div class="tag">Rating:{{ hospital.rating }}/5</div>
-                        </div>
-                </div>
-                {% ifnotequal hospital.user.profile.is_hospital True %}
-                    <a href="{% url 'chat' hospital.id %}">Seek Help!</a>
-                {% endifnotequal %}
-            </a>
+                {% if user.profile.is_hospital %}
+                    <a class="card" href="#" style="--bg-img: url({{ hospital.user.profile.image.url }})">
+                {% else %}
+                <a class="card" href="{% url 'chat' hospital.id %}" style="--bg-img: url({{ hospital.user.profile.image.url }})">
+                {% endif %}
+                    <div>
+                        <br>
+                        <br>
+                        <h1>{{ hospital.name }}</h1>
+                        <p>{{ hospital.description }}</p>
+                        <div class="date">{{ hospital.phone_no }}</div>
+                            <div class="tags">
+                                <div class="tag">Rating:{{ hospital.rating }}/5</div>
+                            </div>
+                    </div>
+                    
+                </a>
             </div>
         </section>
         {% endfor %}
