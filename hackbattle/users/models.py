@@ -81,9 +81,7 @@ class Speciality(models.Model):
 class Appointment(models.Model):
     hname=models.ForeignKey(Hospital,on_delete=models.CASCADE)
     patient=models.ForeignKey(Profile,on_delete=models.CASCADE)
-    accepted=models.BooleanField()
-    date_of_appt=models.DateTimeField(default=None)
-
+    
     def __str__(self):
         return self.hname.name
 

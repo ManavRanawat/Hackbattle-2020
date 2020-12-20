@@ -1,0 +1,15 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            {% for hospital in hospitals %}
+                <div>
+                    <h2>{{hospital.name}}</h2>
+                    <button type="submit" name="{{hospital.name}}">Book an appointment!</button>
+                </div>>
+            {% endfor %}
+        </form>
+    </div>
+{% endblock content %}

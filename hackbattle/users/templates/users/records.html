@@ -1,0 +1,15 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        {% if appointments %}
+            {% for appointment in appointments %}
+                <div class="media-body">
+                    <h3>Appointment at </h3><h2>{{appointment.hname.name}}</h2>
+                    <h4>Contact Info: {{appointment.hname.email}}</h4>
+                </div>
+                <br><br>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock content %}

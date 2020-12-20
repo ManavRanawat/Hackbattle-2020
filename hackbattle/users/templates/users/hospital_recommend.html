@@ -2,9 +2,8 @@
 
 {% block content %}
 <h1>Disease predicted : {{disease}}</h1>
- <h2><i>we suggest you to visit a {{res}} </i></h2>
- <h3>You can visit the following hospitals </h3>
- {% for i in obj %}
-     <h1>{{i}}</h1>
- {% endfor %}
+<h2><i>we suggest you to visit a {{specialist}} </i></h2>
+<h3>Book an appointment in one of the hospitals nearby!</h3>
+<br><br>
+<a href="{% url 'suggested-specialist' specialist %}">View Suggested Hospitals</a>
 {% endblock content %}

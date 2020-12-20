@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 import pickle
 from . import disease_p,ct_scan,xray
 from django.views.generic import CreateView
+from django.core.mail import send_mail
 
 def register(request):
     if request.method == 'POST':
@@ -74,7 +75,7 @@ def profile(request):
 def aidoctor(request):
     return render(request,'users/ai-doctor.html')
 
-def chatsection(request,pk):
+def chatsection_user(request,pk):
     print(request)
     if request.method=="POST":
         hosp=get_object_or_404(Hospital,id=pk)
@@ -87,7 +88,7 @@ def chatsection(request,pk):
     # pat_id=request.user.id
     pat=Profile.objects.filter(user=request.user).first()
     chats=Chat.objects.filter(hospital=hosp,patient=pat).order_by('date')
-    return render(request,'users/chatsection.html',{'hospital':hosp,'chats':chats})
+    return render(request,'users/chatsection_user.html',{'hospital':hosp,'chats':chats})
 
 
 
@@ -168,7 +169,8 @@ def disease(request):
         if flag==1:
             result=disease_p.disease(a)
             if len(a)==0:
-                print("no symptom selected")
+                messages.warning(request, f'You have not selected any symptoms!')
+                return redirect('disease')
             elif len(a)==1:
                 PatientRecord.objects.create(patient=request.user.profile,symptom1=a[0],symptom2=None,symptom3=None,symptom4=None,disease_detected=result[0])
             elif len(a)==2:
@@ -192,12 +194,12 @@ def disease(request):
             if result[0] in specialist[i]:
                 res=i
                 break
-        print("disease ka specialiy",res)
-        obj=Speciality.objects.filter(speciality=res)
-        print(obj)
+        # print("disease ka speciality",res)
+        # obj=Speciality.objects.filter(speciality=res)
+        # print(obj)
         # arr=obj.values()
         
-        return render(request,'users/hospital_recommend.html',{'disease':result[0],'obj':obj,'res':res})
+        return render(request,'users/hospital_recommend.html',{'disease':result[0],'specialist':res})
 
 class CTCreateView(LoginRequiredMixin, CreateView):
     model = ScanCT
@@ -230,18 +232,37 @@ def report_xray(request):
 
 def hospital_recommend(request):
     print("recommend me aa raha hai")
-   
-    # disease=PatientRecord.objects.filter(user=request.user).last()
-    # res=""
-    # for i in specialist.keys():
-    #     if disease in specialist[i]:
-    #         res=i
-    #         break
-    # print(res)
-
     return render(request,'users/hospital_recommend.html')
-    
+#     # disease=PatientRecord.objects.filter(user=request.user).last()
+#     # res=""
+#     # for i in specialist.keys():
+#     #     if disease in specialist[i]:
+#     #         res=i
+#     #         break
+#     # print(res)
 
+
+def suggestedspecialist(request,specialist):
+    hospitalspecialities=Speciality.objects.filter(speciality=specialist)
+    hospitals=[]
+    for i in hospitalspecialities:
+        hospitals.append(i.username)
+    print(hospitals)
+    if request.method=="POST":
+        for hosp in hospitals:
+            if hosp.name in request.POST:
+                Appointment.objects.create(hname=hosp,patient=request.user.profile)
+                messages.success(request, f'Appointment confirmed at hospital {hosp.name}!!')
+                print('EMAILLLLLLLLLLLL')
+                print(request.user.email+"  "+hosp.email)
+                # sending mail to both
+                body='You have an appointment from '+request.user.username
+                send_mail('New Appoinment!',body,'submissionspit@gmail.com',[hosp.email])
+                body='You have booked an appointment for '+hosp.name
+                send_mail('Appointment Confirmation!',body,'submissionspit@gmail.com',[request.user.email])
+                return redirect('blog-home')
+    print(hospitals)
+    return render(request,'users/bookappointment.html',{'hospitals':hospitals})
 
 
 
@@ -262,3 +283,8 @@ def hospital_recommend(request):
 
     # Family Medicine->
     # 'Tuberculosis', 'Common Cold', 'Pneumonia', 'Dimorphic hemmorhoids(piles)',
+
+def records(request):
+    user=request.user
+    appointments=Appointment.objects.filter(patient=user.profile)
+    return render(request,'users/records.html',{'appointments':appointments})

@@ -9,15 +9,18 @@ from users.views import *
 
 urlpatterns = [
     path('doctor/',views.register,name='ai-doctor'),
-    path('<int:pk>/chat/',views.chatsection,name='chat'),
+    path('<int:pk>/chat/',views.chatsection_user,name='chat'),
     # path('register-hospital/',views.register_hospital,name='register-hospital'),
     # path('',views.home,name="home"),
     path('hospitals/',views.dashboard,name="hospitals"),
     path('disease/',views.disease,name="disease"),
+    path('suggested/<str:specialist>',views.suggestedspecialist,name='suggested-specialist'),
     path('ct_report/',views.report_ct,name='report-ct'),
     path('xray_report/',views.report_xray,name='report-xray'),
     path('scanct_form/', CTCreateView.as_view(), name='ct-create'),
     path('scanxray_form/', XrayCreateView.as_view(), name='xray-create'),
     path('addspeciality/',views.addspeciality,name='addspeciality'),
     path('hospital_recommend/',views.hospital_recommend,name='hospital-recommend'),
+
+    path('records/',views.records,name='previous-records'),
 ]
