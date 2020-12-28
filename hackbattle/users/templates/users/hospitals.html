@@ -212,7 +212,7 @@ font-weight: normal;
                 {% if user.profile.is_hospital %}
                     <a class="card" href="#" style="--bg-img: url({{ hospital.user.profile.image.url }})">
                 {% else %}
-                <a class="card" href="{% url 'chat' hospital.id %}" style="--bg-img: url({{ hospital.user.profile.image.url }})">
+                <a class="card" href="{% url 'chat' hospital.id 'patient' %}" style="--bg-img: url({{ hospital.user.profile.image.url }})">
                 {% endif %}
                     <div>
                         <br>

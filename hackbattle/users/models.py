@@ -9,8 +9,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     is_hospital=models.BooleanField(default=False)
-    def __str__(self):
-        return f'{self.user.username} Profile'
+    # def __str__(self):
+    #     return f'{self.user.username} Profile'
 
     def save(self,*args,**kwargs):
         super().save(*args, **kwargs)
@@ -42,8 +42,8 @@ class Hospital(models.Model):
     phone_no=models.CharField(default=None,max_length=15,null=True)
     rating=models.IntegerField(default=3)
 
-    def __str__(self):
-        return self.user.username
+    # def __str__(self):
+    #     return self.id
 '''
 Pediatrician ->
  'Jaundice', 'Malaria', 'Chicken pox', 'Dengue', 'Typhoid',
@@ -75,15 +75,15 @@ class Speciality(models.Model):
     )
     speciality=models.CharField(choices=diff_spec,max_length=100,default=6)
 
-    def __str__(self):
-        return self.username.name
+    # def __str__(self):
+    #     return self.username.name
 
 class Appointment(models.Model):
     hname=models.ForeignKey(Hospital,on_delete=models.CASCADE)
     patient=models.ForeignKey(Profile,on_delete=models.CASCADE)
     
-    def __str__(self):
-        return self.hname.name
+    # def __str__(self):
+    #     return self.hname.name
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -91,8 +91,8 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(Hospital, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.title
+    # def __str__(self):
+    #     return self.title
     
 class Chat(models.Model):
     hospital=models.ForeignKey(Hospital,on_delete=models.CASCADE)
@@ -100,6 +100,8 @@ class Chat(models.Model):
     sender=models.CharField(max_length=15,default="Patient")
     message=models.CharField(max_length=300)
     date=models.DateTimeField(default=timezone.now)
+    # def __str__(self):
+    #     return self.message
 
 class ScanCT(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank= True, null=True)

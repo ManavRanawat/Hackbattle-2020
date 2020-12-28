@@ -8,14 +8,27 @@
     <div class="jumbotron" style="color: white; background-color: black;">
         {% if chats %}
             {% for chat in chats %}
-                {% ifnotequal chat.sender 'Hospital' %}
+
+                {% if usrtype == "patient" and chat.sender == "Patient" %}
                     <div class="contain darker">    
-                        <h4 style="color: grey;">{{chat.patient.user.username}}</h4>
-                {% else %} 
-                <!-- message is from Hospital -->
+                        <h4 style="color: rgb(54, 42, 165);">{{chat.patient.user.username}}</h4>
+                {% elif usrtype == "hospital" and chat.sender == "Hospital" %}
+                    <div class="contain darker">    
+                        <h4 style="color: rgb(54, 42, 165);">{{hospital.name}}</h4>
+
+
+                {% elif chat.sender == "Hospital" %} 
+                <!-- message is from Hospital to user  -->
                     <div class="contain">
-                        <h4>{{chat.hospital.username}}</h4>
-                {% endifnotequal %}
+                        <h4 style="color: brown;" >{{hospital.name}}</h4>
+                {% else %}
+                <!-- message is from User for hospital -->
+                    <div class="contain">
+                        <h4 style="color: brown;" >{{chat.patient.user.username}}</h4>
+
+
+
+                {% endif %}
                         <!-- <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right"> -->
                         <p style="color: black;">{{chat.message}}</p>
                         <span class="time-left">{{chat.date|date:'d M, H:i'}}</span>
@@ -28,8 +41,8 @@
     <br><br>
     <form method="POST" >
         {% csrf_token %}
-        <!-- {{form}} -->
-        <input type="text" placeholder="Go ahead and ask your queries!" name="usermessage" /> 
+        {{form}}
+        <!-- <input type="text" placeholder="Go ahead and ask your queries!" name="usermessage" />  -->
         <button type="submit" >Send</button>
         <br>
     </form>

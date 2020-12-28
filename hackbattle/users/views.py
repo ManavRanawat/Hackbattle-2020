@@ -9,6 +9,7 @@ import pickle
 from . import disease_p,ct_scan,xray
 from django.views.generic import CreateView
 from django.core.mail import send_mail
+from django.urls import reverse_lazy
 
 def register(request):
     if request.method == 'POST':
@@ -72,37 +73,96 @@ def profile(request):
         context['h_form']=h_form
     return render(request, 'users/profile.html', context)
 
+@login_required
 def aidoctor(request):
     return render(request,'users/ai-doctor.html')
 
-def chatsection_user(request,pk):
-    print(request)
-    if request.method=="POST":
-        hosp=get_object_or_404(Hospital,id=pk)
-        pat=Profile.objects.filter(user=request.user).first()
-        msg=request.POST.get("usermessage","")
-        if msg!="":
-            chat_obj=Chat(hospital=hosp,patient=pat,sender="Patient",message=msg)
-            chat_obj.save()
-    hosp=get_object_or_404(Hospital,id=pk)
-    # pat_id=request.user.id
-    pat=Profile.objects.filter(user=request.user).first()
-    chats=Chat.objects.filter(hospital=hosp,patient=pat).order_by('date')
-    return render(request,'users/chatsection_user.html',{'hospital':hosp,'chats':chats})
+# def chatsection_user(request,pk):
+#     print(request)
+#     if request.method=="POST":
+#         hosp=get_object_or_404(Hospital,id=pk)
+#         pat=Profile.objects.filter(user=request.user).first()
+#         msg=request.POST.get("usermessage","")
+#         if msg!="":
+#             chat_obj=Chat(hospital=hosp,patient=pat,sender="Patient",message=msg)
+#             chat_obj.save()
+#     hosp=get_object_or_404(Hospital,id=pk)
+#     # pat_id=request.user.id
+#     pat=Profile.objects.filter(user=request.user).first()
+#     chats=Chat.objects.filter(hospital=hosp,patient=pat).order_by('date')
+#     return render(request,'users/chatsection_user.html',{'hospital':hosp,'chats':chats})
 
-def chatsection_hospital(request,pk):
-    if request.method=="POST":
-        patient=get_object_or_404(User,id=pk)
-        hosp=request.user.hospital
-        msg=request.POST.get("usermessage","")
-        if msg!="":
-            chat_obj=Chat(hospital=hosp,patient=patient.profile,sender="Hospital",message=msg)
-            chat_obj.save()
-    patient=get_object_or_404(User,id=pk)
-    # pat_id=request.user.id
-    hosp=request.user.hospital
-    chats=Chat.objects.filter(hospital=hosp,patient=patient.profile).order_by('date')
-    return render(request,'users/chatsection_hospital.html',{'patient':patient,'chats':chats})
+class ChatSectionUserView(LoginRequiredMixin,CreateView):
+    template_name='users/chatsection.html'
+    model=Chat
+    fields=['message']
+    
+    def dispatch(self, request, *args, **kwargs):
+        print(self.kwargs['usrtype'])
+        if request.user.profile.is_hospital and self.kwargs['usrtype']=="hospital":
+            return super().dispatch(request, *args, **kwargs)
+        elif (not request.user.profile.is_hospital) and self.kwargs['usrtype']=="patient":
+            return super().dispatch(request, *args, **kwargs)
+        #above condition checks if the user is indeed the respective role he mentioned in the url
+        messages.warning(request, f'You are not authorized for that!')
+        return redirect('blog-home')
+
+    def get_success_url(self):
+        return reverse_lazy('chat', kwargs={'pk': self.kwargs['pk'],'usrtype':self.kwargs['usrtype']})
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context["usrtype"]=self.kwargs['usrtype']
+        if self.kwargs['usrtype']=="patient": #patient logged in,url me we passed hospital id
+            hospId=self.kwargs['pk']
+            context['curr_user']=self.request.user
+        else: #hospital logged in,url me we passed patient id
+            hospId=self.request.user.hospital.id
+            uss=User.objects.filter(id=self.kwargs['pk']).first()
+            context['curr_user']=uss
+        print(hospId,context['usrtype'])
+        # print(self.request.GET)
+        hosp=get_object_or_404(Hospital,id=hospId)
+        print("HI THERE")
+        context['hospital']=hosp
+        print(hosp.name)
+        context['chats']=Chat.objects.filter(hospital=hosp,patient=context['curr_user'].profile).order_by('date')
+        return context
+
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if self.kwargs['usrtype']=="patient": #patient logged in,url me we passed hospital id
+            hospId=self.kwargs['pk']
+            userID=self.request.user.profile.id
+        else: #hospital logged in,url me we passed patient id
+            hospId=self.request.user.hospital.id
+            uss=User.objects.filter(id=self.kwargs['pk']).first()
+            userID=uss.profile.id
+        form.instance.hospital=get_object_or_404(Hospital,id=hospId)
+        form.instance.patient=get_object_or_404(Profile,id=userID)
+        if(self.kwargs['usrtype']=='hospital'):
+            form.instance.sender='Hospital'
+        else:
+            form.instance.sender='Patient'
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+# def chatsection_hospital(request,pk):
+#     if request.method=="POST":
+#         patient=get_object_or_404(User,id=pk)
+#         hosp=request.user.hospital
+#         msg=request.POST.get("usermessage","")
+#         if msg!="":
+#             chat_obj=Chat(hospital=hosp,patient=patient.profile,sender="Hospital",message=msg)
+#             chat_obj.save()
+#     patient=get_object_or_404(User,id=pk)
+#     # pat_id=request.user.id
+#     hosp=request.user.hospital
+#     chats=Chat.objects.filter(hospital=hosp,patient=patient.profile).order_by('date')
+#     return render(request,'users/chatsection_hospital.html',{'patient':patient,'chats':chats})
 
 def patientslist(request):
     chats=Chat.objects.filter(hospital=request.user.hospital)

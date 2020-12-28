@@ -8,7 +8,7 @@
                 <img class="rounded-circle article-img" src="{{ patient.image.url }}">
                 <div class="media-body">
                 <div class="article-metadata">
-                    <a class="mr-2" href="{% url 'chat_hospital' patient.user.id %}">{{ patient.user.username }}</a>
+                    <a class="mr-2" href="{% url 'chat' patient.user.id 'hospital' %}">{{ patient.user.username }}</a>
                     <br><h4 class="text-muted">{{ patient.user.email }}</h4>
                 </div>
                 <h2 class="article-title">{{ object.title }}</h2>
