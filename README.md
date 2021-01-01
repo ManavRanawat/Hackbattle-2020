@@ -1,3 +1,4 @@
+
 # **An AI-doctor web based project**
 
 This project was developed to create an interactive website between the patients and the hospital admins. Also acts as an AI doctor for the patients.

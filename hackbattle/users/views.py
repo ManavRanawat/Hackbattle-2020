@@ -19,8 +19,9 @@ def register(request):
             curr_user = User.objects.filter(username=form.cleaned_data.get('username')).first()
             is_hosp=form.cleaned_data.get('is_hospital')
             obj=Profile.objects.create(user=curr_user,is_hospital=is_hosp)
-            if is_hosp:
-                Hospital.objects.create(user=curr_user,email=form.cleaned_data.get('email'))
+            print("HIIIIIIIIIIIIIIIIII")
+            # if is_hosp:
+            #     Hospital.objects.create(user=curr_user,email=form.cleaned_data.get('email'))
             # obj.save()
             print("SAVED")
             username = form.cleaned_data.get('username')
